@@ -3,13 +3,12 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import ContextProvider from './store/provider';
+import ContextProvider from './store';
 
 const actions = {
   test: {
-    actionTest: (_, text) => {
-      console.log(text);
-      return true;
+    actionTest: (text) => {
+      return { test1: text };
     }
   }
 };
