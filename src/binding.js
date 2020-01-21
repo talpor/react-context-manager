@@ -1,7 +1,7 @@
 import { useReducer } from 'react';
 
 const reducer = (action) => (state, arg) => {
-  const newState = action(arg);
+  const newState = action(state, arg);
   return { ...state, ...newState };
 };
 

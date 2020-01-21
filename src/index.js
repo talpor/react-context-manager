@@ -1,32 +1,29 @@
+// import ContextProvider, { Context } from './provider';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
-import ContextProvider from './store';
 
-const actions = {
-  test: {
-    actionTest: (text) => {
-      return { test1: text };
-    }
-  }
+import bindActions from './binding';
+
+const contextManager = {version: '0.0.1'};
+
+export const buildContext = (store, actions) => React.createContext({ actions, ...store });
+// export let Context;
+
+const ContextProvider = ({ store, actions, children }) => {
+  const bindedActions = bindActions(store, actions);
+  contextManager.Context = contextManager.Context || buildContext(store, bindedActions);
+  const value = {
+    actions: bindedActions,
+    ...store
+  };
+
+  return (
+    <contextManager.Context.Provider value={value}>
+      {children}
+    </contextManager.Context.Provider>
+  );
 };
 
-const store = {
-  test: {
-    test1: 'TEST'
-  }
-};
+contextManager.ContextProvider = ContextProvider;
 
-ReactDOM.render(
-  <ContextProvider actions={actions} store={store}>
-    <App />
-  </ContextProvider>,
-  document.getElementById('root')
-);
+export default contextManager;
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
