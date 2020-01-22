@@ -1,12 +1,11 @@
-// import ContextProvider, { Context } from './provider';
 import React from 'react';
 
 import bindActions from './binding';
+import mapContextToProps from './hoc';
 
 const contextManager = {version: '0.0.1'};
 
 export const buildContext = (store, actions) => React.createContext({ actions, ...store });
-// export let Context;
 
 const ContextProvider = ({ store, actions, children }) => {
   const bindedActions = bindActions(store, actions);
@@ -24,6 +23,8 @@ const ContextProvider = ({ store, actions, children }) => {
 };
 
 contextManager.ContextProvider = ContextProvider;
+contextManager.mapStoreToProps = mapContextToProps(contextManager);
+contextManager.mapActionsToProps = mapContextToProps(contextManager, 'actions');
 
 export default contextManager;
 

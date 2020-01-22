@@ -6,17 +6,17 @@ const reducer = (action) => (state, arg) => {
 };
 
 const bindActions = (store, actions) => {
-  const bindedActions = {};
+  const boundActions = {};
   Object.keys(actions).forEach(scope => {
-    bindedActions[scope] = {};
+    boundActions[scope] = {};
     Object.keys(actions[scope]).forEach(action => {
-      [store[scope], bindedActions[scope][action]] = useReducer(
+      [store[scope], boundActions[scope][action]] = useReducer(
         reducer(actions[scope][action]),
         store[scope]
       );
     });
   })
-  return bindedActions;
+  return boundActions;
 };
 
 export default bindActions;
