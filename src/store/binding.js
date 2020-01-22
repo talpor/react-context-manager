@@ -1,43 +1,22 @@
-// import { store } from './store'
+import { useReducer } from 'react';
 
-// Used here in order to make testing easier
-export const getNewState = (newState, result) => (state) => {
-  Object.keys(result).forEach(key => {
-    if (!Array.isArray(result[key])) {
-      newState[key] = { ...state[key], ...result[key] }
-    } else {
-      newState[key] = result[key]
-    }
-  })
-  return newState
-}
-/**
- * Binds actions to store
- *
- * @param {*} app
- * @returns
- */
-const bindActions = (app, store) => {
-  const actions = {}
-  Object.keys(store.actions).forEach(scope => {
-    actions[scope] = {}
-    Object.keys(store.actions[scope]).forEach(action => {
-  console.log('bind', action);
-      actions[scope][action] = async (...args) => {
-        let result = {}
-        try {
-          result = await store.actions[scope][action](app.state, ...args)
-        } catch (error) {
-          console.log(error)
-        }
+const reducer = (action) => (state, arg) => {
+  const newState = action(arg);
+  return { ...state, ...newState };
+};
 
-        const newState = {}
-        app.setState(getNewState(newState, result))
-        return newState
-      }
-    })
+const bindActions = (store, actions) => {
+  const bindedActions = {};
+  Object.keys(actions).forEach(scope => {
+    bindedActions[scope] = {};
+    Object.keys(actions[scope]).forEach(action => {
+      [store[scope], bindedActions[scope][action]] = useReducer(
+        reducer(actions[scope][action]),
+        store[scope]
+      );
+    });
   })
-  return actions
-}
+  return bindedActions;
+};
 
 export default bindActions;

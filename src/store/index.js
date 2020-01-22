@@ -1,11 +1,3 @@
-import React from 'react';
+import ContextProvider from './provider';
 
-export const buildGlobalContext = (actions, state) => {
-    const store = {
-        actions: {...actions},
-        ...state
-    };
-    return React.createContext(store);
-};
-
-export default buildGlobalContext;
+export default ContextProvider;
