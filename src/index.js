@@ -2,29 +2,30 @@ import React from 'react';
 
 import bindActions from './binding';
 import mapContextToProps from './hoc';
+import { getContext } from './hooks';
+import createContext from './manager';
 
-const contextManager = {version: '0.0.1'};
+const contextManager = { version: '0.0.1', Contexts: {} };
 
-export const buildContext = (store, actions) => React.createContext({ actions, ...store });
-
-const ContextProvider = ({ store, actions, children }) => {
-  const bindedActions = bindActions(store, actions);
-  contextManager.Context = contextManager.Context || buildContext(store, bindedActions);
+const ContextProvider = ({ store, actions, children, name = 'root' }) => {
+  const boundActions = bindActions(store, actions);
+  const Context = createContext(contextManager)(store, boundActions, name);
   const value = {
-    actions: bindedActions,
+    actions: boundActions,
     ...store
   };
 
   return (
-    <contextManager.Context.Provider value={value}>
+    <Context.Provider value={value}>
       {children}
-    </contextManager.Context.Provider>
+    </Context.Provider>
   );
 };
 
 contextManager.ContextProvider = ContextProvider;
 contextManager.mapStoreToProps = mapContextToProps(contextManager);
 contextManager.mapActionsToProps = mapContextToProps(contextManager, 'actions');
+contextManager.getContext = getContext(contextManager);
 
 export default contextManager;
 

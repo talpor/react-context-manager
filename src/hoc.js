@@ -24,14 +24,17 @@ const storeSelector = (store, fields) => {
 };
 
 
-const mapContextToProps = (module, requiredScope = 'store') => (WrappedComponent) => (storeFields) => (props) => (
-  <module.Context.Consumer>
-    {store => {
-      const injectedProp = {[requiredScope]: storeSelector(requiredScope !== 'store' ? store[requiredScope] : store, storeFields)}
-      return <WrappedComponent {...props} {...injectedProp} />
-    }}
-  </module.Context.Consumer>
-);
+const mapContextToProps = (module, requiredScope = 'store') => (WrappedComponent) => (storeFields, contextName = 'root') => (props) => {
+  const Context = module.Contexts[contextName];
+  return (
+    <Context.Consumer>
+      {store => {
+        const injectedProp = {[requiredScope]: storeSelector(requiredScope !== 'store' ? store[requiredScope] : store, storeFields)}
+        return <WrappedComponent {...props} {...injectedProp} />
+      }}
+    </Context.Consumer>
+  );
+};
 
 
 export default mapContextToProps;
