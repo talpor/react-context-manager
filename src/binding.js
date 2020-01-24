@@ -1,8 +1,8 @@
-import { useReducer } from 'react';
+/* mport { useReducer } from 'react';
 
 const reducer = (action) => (state, args) => {
   const newState = action(state, ...args);
-  return { ...state, ...newState };
+  re-turn { ...state, ...newState };
 };
 
 const bindActions = (store, actions) => {
@@ -19,6 +19,16 @@ const bindActions = (store, actions) => {
     });
   })
   return boundActions;
-};
+}; */
 
-export default bindActions;
+export const injectCallback = (actions, callback) => {
+  const injectedCallbacks = {};
+  Object.keys(actions).forEach(scope => {
+    injectedCallbacks[scope] = {};
+    Object.keys(actions[scope]).forEach(action => {
+      injectedCallbacks[scope][action] = callback(actions[scope][action])
+    });
+  });
+
+  return injectedCallbacks;
+};
