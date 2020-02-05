@@ -1,4 +1,4 @@
-import { GlobalStore, UnBoundActions /*, Actions */ } from '../types';
+import { GlobalStore, UnBoundActions } from '../types';
 import { createDispatcher, createReducer, bindScope } from '../utils';
 
 describe('utils', () => {
