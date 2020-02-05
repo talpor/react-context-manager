@@ -40,11 +40,11 @@ const ContextProvider = <
   );
 
   return (
-    <CTX.store.Provider value={state}>
-      <CTX.actions.Provider value={actionDispatcher}>
+    <CTX.actions.Provider value={actionDispatcher}>
+      <CTX.store.Provider value={state}>
         {children}
-      </CTX.actions.Provider>
-    </CTX.store.Provider>
+      </CTX.store.Provider>
+    </CTX.actions.Provider>
   );
 };
 

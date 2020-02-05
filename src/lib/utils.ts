@@ -52,7 +52,7 @@ export const createDispatcher = <
   );
 };
 
-const bindAction = <
+export const bindAction = <
   GS extends GlobalStore,
   UA extends UnBoundActions<GS>,
   US extends UnBoundScope<GS>,
@@ -77,7 +77,7 @@ const bindAction = <
   return boundAction;
 };
 
-const bindScope = <
+export const bindScope = <
   GS extends GlobalStore,
   UA extends UnBoundActions<GS>,
   US extends UnBoundScope<GS>
