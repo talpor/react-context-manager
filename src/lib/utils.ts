@@ -1,5 +1,3 @@
-/* tslint:disable:no-expression-statement */
-
 import {
   Actions,
   BoundAction,

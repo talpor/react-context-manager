@@ -1,5 +1,3 @@
-// import ContextProvider, { Context } from './provider';
-/* tslint:disable:no-expression-statement */
 import React, { Context, createContext, Reducer, useReducer } from 'react';
 import { Actions, GlobalStore, UnBoundActions } from './types';
 import { createDispatcher, createReducer } from './utils';
