@@ -1,6 +1,7 @@
 node_modules
 build
 test
+lib/**.js
 src/**.js
 .idea/*
 
