@@ -1,5 +1,3 @@
-/* tslint:disable:no-expression-statement */
-
 import {
   Actions,
   BoundAction,
@@ -9,54 +7,6 @@ import {
   UnBoundActions,
   UnBoundScope
 } from './types';
-
-// type Callback = (
-//   scope: string
-// ) => (action: any) => (args: ReadonlyArray<any>) => void;
-
-// export const injectCallback = (
-//   actions: UnBoundActions,
-//   callback: Callback
-// ): Actions<typeof actions> => {
-//   const injectedCallbacks: Actions<typeof actions> = Object.keys(
-//     actions
-//   ).reduce((partial: Actions<typeof actions>, scope: string) => {
-//     return {
-//       ...partial,
-//       [scope]: Object.keys(actions[scope]).reduce(
-//         (scopePartial: any, action: string) => {
-//           return {
-//             ...scopePartial,
-//             [action]: callback(scope)(actions[scope][action])
-//           };
-//         },
-//         {}
-//       )
-//     };
-//   }, {});
-
-//   return injectedCallbacks;
-// };
-
-// function buildContext<T extends UnBoundActions>(
-//   store: GlobalStore,
-//   actions: Actions<T>
-// ): Context<any> {
-//   return makeContext({ actions, ...store });
-// }
-
-// export const createContext = (module: any) => (
-//   store: GlobalStore,
-//   actions: any,
-//   name: any
-// ) => {
-//   const context = module.Contexts[name] || buildContext(store, actions);
-//   module.Contexts[name] = context;
-
-//   return context;
-// };
-
-// export default createContext;
 
 export interface ActionType<
   GS extends GlobalStore,
@@ -155,33 +105,3 @@ export const bindScope = <
 
   return boundScope;
 };
-
-// interface Store extends GlobalStore {
-//   readonly val: number;
-// }
-
-// const gs: Store = {
-//   val: 0
-// };
-
-// interface UUser extends UnBoundScope {
-//   add: (s: Store) => (a: number, b: number) => Store;
-// }
-
-// export const user: UUser = {
-//   add: (s: Store) => (a: number, b: number) => ({
-//     val: s.val + a + b
-//   })
-// };
-
-// export interface UActions extends UnBoundActions {
-//   readonly user: UUser;
-// }
-
-// export const uactions: UActions = {
-//   user
-// };
-
-// const x = createDispatcher(uactions, console.log);
-
-// x.user.add(a)
