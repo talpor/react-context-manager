@@ -1,14 +1,6 @@
-import React, { Context, createContext, Reducer, useReducer } from 'react';
-import { Actions, GlobalStore, UnBoundActions } from './types';
+import React, { createContext, Reducer, useReducer } from 'react';
+import { Actions, ContextObject, GlobalStore, UnBoundActions } from './types';
 import { createDispatcher, createReducer } from './utils';
-
-export interface ContextObject<
-  GS extends GlobalStore,
-  UA extends UnBoundActions<GS>
-> {
-  readonly actions: Context<Actions<GS, UA>>;
-  readonly store: Context<GS>;
-}
 
 export const initContext = <
   GS extends GlobalStore,

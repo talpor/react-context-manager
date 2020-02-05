@@ -1,3 +1,5 @@
+import { Context } from 'react';
+
 export interface GlobalStore {
   readonly [key: string]: any;
 }
@@ -29,3 +31,11 @@ export interface UnBoundActions<GS extends GlobalStore> {
 export type Actions<GS extends GlobalStore, T extends UnBoundActions<GS>> = {
   readonly [S in keyof T]: BoundScope<GS, T[S]>
 };
+
+export interface ContextObject<
+  GS extends GlobalStore,
+  UA extends UnBoundActions<GS>
+> {
+  readonly actions: Context<Actions<GS, UA>>;
+  readonly store: Context<GS>;
+}
