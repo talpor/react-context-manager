@@ -17,7 +17,6 @@ interface ContextProviderProps<
   readonly actions: UA;
   readonly context: ContextObject<GS, UA>;
   readonly children: ReadonlyArray<JSX.Element> | JSX.Element;
-  readonly name: string;
   readonly store: GS;
 }
 
@@ -41,9 +40,7 @@ const ContextProvider = <
 
   return (
     <CTX.actions.Provider value={actionDispatcher}>
-      <CTX.store.Provider value={state}>
-        {children}
-      </CTX.store.Provider>
+      <CTX.store.Provider value={state}>{children}</CTX.store.Provider>
     </CTX.actions.Provider>
   );
 };
