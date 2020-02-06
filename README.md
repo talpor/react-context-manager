@@ -135,11 +135,12 @@ ReactDOM.render(
 
 ### ContextProvider's Props
 
-| Name          | Default       |Required     |Description  |
-| ------------- |---------------|--------------|-------------|-------------|
-| store         | N/A           |True         | This is the initial store of your context. For more info, re-visit the previous section.|
-| actions       | N/A        |True         | Actions that are to be made avaible on the context.
-| context       | N/A          |True        | Context used through the provider's children.
+| Name          | Default       |Required      |Description                                                                              |
+| ------------- |---------------|--------------|-----------------------------------------------------------------------------------------|
+| store         | N/A           |True          | This is the initial store of your context. For more info, re-visit the previous section.|
+| actions       | N/A           |True          | Actions that are to be made avaible on the context.                                     |
+| context       | N/A           |True          | Context used through the provider's children.                                           |
+
 
 Now, that we have our context created, we can access it using our custom hook `useContext`, as seen here:
 
@@ -224,3 +225,4 @@ class BaseApp extends React.Component {
 
 export default mapStoreToProps(context)(BaseApp)('test');
 ```
+
