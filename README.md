@@ -142,12 +142,11 @@ ReactDOM.render(
 | context       | N/A           |True          | Context used through the provider's children.                                           |
 
 
-Now, that we have our context created, we can access it using our custom hook `useContext`, as seen here:
-
 ***App.jsx***
 ```jsx=
 import React, { useContext, useEffect } from 'react';
-import { getContext } from 'react-context-manager';
+
+import { context } from '../index.jsx';
 
 
 function App() {
