@@ -135,7 +135,7 @@ ReactDOM.render(
 
 ### ContextProvider's Props
 
-| Name          | Default       |Required      |Description                                                                              |
+| ***Name***    | ***Default*** |***Required***|***Description***                                                                        |
 | ------------- |---------------|--------------|-----------------------------------------------------------------------------------------|
 | store         | N/A           |True          | This is the initial store of your context. For more info, re-visit the previous section.|
 | actions       | N/A           |True          | Actions that are to be made avaible on the context.                                     |
