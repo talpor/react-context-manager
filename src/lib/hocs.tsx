@@ -1,4 +1,4 @@
-import React, { ComponentClass, FunctionComponent, useContext } from 'react';
+import React, { ComponentClass, FunctionComponent } from 'react';
 
 import { Actions, ContextObject, GlobalStore, UnBoundActions } from './types';
 
