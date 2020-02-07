@@ -4,7 +4,7 @@ A lightweight manager for your Context API's.
 
 It helps you to set a standard for your React apps using Context API.
 
-We recommend you to use this along with our custom [CLI](#).
+We recommend you to use this along with our custom [CLI](https://github.com/talpor/react-context-manager-cli).
 
 For TypeScript documentation, [click here](#).
 
@@ -40,7 +40,7 @@ The objects inside your scope can be whatever you want and you can access them d
 
 Here is an example:
 
-```jsx=
+```jsx
 const store = {
   team: {
     token: 'ReactContextManagerRocks',
@@ -66,7 +66,7 @@ Also, the dispatcher injects the current state portion to the action in case dat
 
 Finally, actions should return the next state of the application, as shown in this next example:
 
-```jsx=
+```jsx
 const actions = {
   team: {
     addColaborator: (state) => (email) => {
@@ -97,7 +97,7 @@ const actions = {
 In order to create a context you need to import a `ContextProvider` around the component tree where you want to use it. Here we set it on the root, but it can be done anywhere on the component tree:
 
 ***index.jsx***
-```jsx=
+```jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -143,7 +143,7 @@ ReactDOM.render(
 
 
 ***App.jsx***
-```jsx=
+```jsx
 import React, { useContext, useEffect } from 'react';
 
 import { context } from '../index.jsx';
@@ -187,7 +187,7 @@ That's the way we get our context along the application and the only thing you n
 
 We understand not all projects would want to use function-based components and, thinking of that, we implemented a HOC (High Order Component) called `mapContextToProps` (very similar to Redux), in order to inject the context as props in your component, as you can see next:
 
-```jsx=
+```jsx
 import React from 'react';
 
 import {
