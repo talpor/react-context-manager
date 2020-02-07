@@ -18,13 +18,13 @@ To add `react-context-manager` to your project run the following command in your
 
 With **npm**:
 
-```
+```console
 npm install --save react-context-manager
 ```
 
 With **yarn**:
 
-```
+```console
 yarn add react-context-manager
 ```
 
