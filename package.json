@@ -1,11 +1,11 @@
 {
   "name": "react-context-manager",
-  "version": "1.0.0",
-  "description": "a lightweight store manager based on React Context API",
+  "version": "0.0.1",
+  "description": "A lightweight store manager based on React Context API",
   "main": "build/module/index.js",
   "typings": "build/module/index.d.ts",
   "module": "build/module/index.js",
-  "repository": "https://github.com/YOUR_GITHUB_USER_NAME/react-context-manager",
+  "repository": "https://github.com/talpor/react-context-manager",
   "license": "MIT",
   "keywords": [],
   "scripts": {
