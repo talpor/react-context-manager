@@ -14,18 +14,18 @@ React Context Manager obtained some ideas from [Redux](https://github.com/reduxj
 
 ## Instalation
 
-To add `react-context-manager` to your project run the following command in your project folder:
+To add `@talpor/react-context-manager` to your project run the following command in your project folder:
 
 With **npm**:
 
 ```console
-npm install --save react-context-manager
+npm install --save @talpor/react-context-manager
 ```
 
 With **yarn**:
 
 ```console
-yarn add react-context-manager
+yarn add @talpor/react-context-manager
 ```
 
 **Note:** React Context Manager works with React >= 16.8, because it uses [hooks](https://reactjs.org/docs/hooks-intro.html) internally.
@@ -101,7 +101,7 @@ In order to create a context you need to import a `ContextProvider` around the c
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { ContextProvider, initContext } from 'react-context-manager';
+import { ContextProvider, initContext } from '@talpor/react-context-manager';
 
 const context = initContext();
 
@@ -192,7 +192,7 @@ import React from 'react';
 
 import {
   mapContextToProps
-} from 'react-context-manager';
+} from '@talpor/react-context-manager';
 
 import { context } from '../index.js'
 
