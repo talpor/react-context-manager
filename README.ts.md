@@ -6,7 +6,7 @@ It helps you to set a standard for your React apps using Context API.
 
 We recommend you to use this along with our custom [CLI](https://github.com/talpor/react-context-manager-cli).
 
-For TypeScript documentation, [click here](https://github.com/talpor/react-context-manager/README.ts.md).
+For Javascript documentation, [click here](https://github.com/talpor/react-context-manager/README.md).
 
 ## Influences
 
@@ -46,7 +46,17 @@ The objects inside your scope can be whatever you want and you can access them d
 Here is an example:
 
 ```jsx
-const store = {
+export interface IStore {
+  team: {
+    token: string;
+    colaborators: any[];
+  },
+  test: {
+    test1: string;
+  }
+}
+
+export const store = {
   team: {
     token: 'ReactContextManagerRocks',
     colaborators: [
@@ -72,23 +82,31 @@ Also, the dispatcher injects the current state portion to the action in case dat
 Finally, actions should return the next state of the application, as shown in this next example:
 
 ```jsx
+export interface IUserActions extends UnBoundScope<IStore> {
+  team: {
+    addColaborator: (state: IStore) => (email: string) => IStore
+  };
+  test: {
+    actionTest: (state: IStore) => (text: string) => IStore
+  };
+}
 const actions = {
   team: {
-    addColaborator: (state) => (email) => {
+    addColaborator: state => email => {
       const colaborators = [
         ...state.colaborators,
-        {email: '[youremail]@[yourdomain].com'}
+        { email: '[youremail]@[yourdomain].com' }
       ];
       return { ...state, colaborators };
-    },
+    }
   },
   test: {
-    actionTest: (state) => (text) => {
+    actionTest: state => text => {
       return {
         ...state,
         test: {
-           ...state.test,
-           text
+          ...state.test,
+          text
         }
       };
     }
@@ -96,12 +114,12 @@ const actions = {
 };
 ```
 
-
 ## Usage
 
 In order to create a context you need to import a `ContextProvider` around the component tree where you want to use it. Here we set it on the root, but it can be done anywhere on the component tree:
 
-***index.jsx***
+**_index.jsx_**
+
 ```jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -112,12 +130,12 @@ const context = initContext();
 
 const actions = {
   test: {
-    actionTest: (state) => (text) => {
+    actionTest: state => text => {
       return {
         ...state,
         test: {
-           ...state.test,
-           test1: text
+          ...state.test,
+          test1: text
         }
       };
     }
@@ -126,7 +144,7 @@ const actions = {
 
 const store = {
   test: {
-    test1: 'TEST',
+    test1: 'TEST'
   }
 };
 
@@ -140,19 +158,18 @@ ReactDOM.render(
 
 ### ContextProvider's Props
 
-| ***Name***    | ***Default*** |***Required***|***Description***                                                                        |
-| ------------- |---------------|--------------|-----------------------------------------------------------------------------------------|
-| store         | N/A           |True          | This is the initial store of your context. For more info, re-visit the previous section.|
-| actions       | N/A           |True          | Actions that are to be made avaible on the context.                                     |
-| context       | N/A           |True          | Context used through the provider's children.                                           |
+| **_Name_** | **_Default_** | **_Required_** | **_Description_**                                                                        |
+| ---------- | ------------- | -------------- | ---------------------------------------------------------------------------------------- |
+| store      | N/A           | True           | This is the initial store of your context. For more info, re-visit the previous section. |
+| actions    | N/A           | True           | Actions that are to be made avaible on the context.                                      |
+| context    | N/A           | True           | Context used through the provider's children.                                            |
 
+**_App.jsx_**
 
-***App.jsx***
 ```jsx
 import React, { useContext, useEffect } from 'react';
 
 import { context } from '../index.jsx';
-
 
 function App() {
   const context = useContext(context);
@@ -165,12 +182,13 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          {context.test.test1}<br/>
+          {context.test.test1}
+          <br />
         </p>
         <button
           className="App-link"
           onClick={() => {
-            context.actions.test.actionTest('Bye World!')
+            context.actions.test.actionTest('Bye World!');
           }}
         >
           Say Goodbye!
@@ -181,10 +199,9 @@ function App() {
 }
 
 export default App;
-
 ```
 
-***And that's it!***
+**_And that's it!_**
 
 That's the way we get our context along the application and the only thing you need to worry about is creating powerful actions.
 
@@ -195,11 +212,9 @@ We understand not all projects would want to use function-based components and, 
 ```jsx
 import React from 'react';
 
-import {
-  mapContextToProps
-} from '@talpor/react-context-manager';
+import { mapContextToProps } from '@talpor/react-context-manager';
 
-import { context } from '../index.js'
+import { context } from '../index.js';
 
 class BaseApp extends React.Component {
   componentDidMount() {
@@ -211,12 +226,13 @@ class BaseApp extends React.Component {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p>
-            {this.props.store.test.test1}<br/>
+            {this.props.store.test.test1}
+            <br />
           </p>
           <button
             className="App-link"
             onClick={() => {
-              this.props.actions.test.actionTest('Bye World!')
+              this.props.actions.test.actionTest('Bye World!');
             }}
           >
             Say Goodbye!
@@ -229,4 +245,3 @@ class BaseApp extends React.Component {
 
 export default mapContextToProps(context)(BaseApp)('test');
 ```
-
