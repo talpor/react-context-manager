@@ -7,7 +7,7 @@ export interface GlobalStore {
 // (store) => (userid: number) => globalStore
 export type UnBoundAction<GS extends GlobalStore> = (
   store: GS
-) => (...args: ReadonlyArray<any>) => GS;
+) => (...args: ReadonlyArray<any>) => GS | Promise<GS>;
 
 // (userid: number) => void
 export type BoundAction<GS extends GlobalStore, T extends UnBoundAction<GS>> = (
