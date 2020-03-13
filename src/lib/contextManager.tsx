@@ -31,7 +31,8 @@ const ContextProvider = <
 }: ContextProviderProps<GS, UA>) => {
   const CTX = context;
   const reducer = createReducer<GS, typeof actions>(actions);
-  const [state, dispatch] = useReducer<Reducer<GS, any>>(reducer, store);
+  // TODO: Find typings to allow GS | Promise<GS> in reducer return type
+  const [state, dispatch] = useReducer<Reducer<GS, any>>(reducer as any, store);
 
   const actionDispatcher = createDispatcher<GS, typeof actions>(
     actions,
