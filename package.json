@@ -1,6 +1,6 @@
 {
   "name": "@talpor/react-context-manager",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "A lightweight store manager based on React Context API",
   "main": "build/module/index.js",
   "typings": "build/module/index.d.ts",
@@ -61,8 +61,8 @@
     "node": ">=8.9"
   },
   "dependencies": {
-    "react": "^16.12.0",
-    "react-test-renderer": "^16.12.0"
+    "react": ">=16.8.0",
+    "react-test-renderer": ">=16.8.0"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.8.3",
