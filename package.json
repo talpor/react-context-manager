@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "react": ">=16.8.0",
-    "react-test-renderer": ">=16.8.0"
+    "use-reducer-async": "^2.0.0"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.8.3",
@@ -81,6 +81,7 @@
     "open-cli": "^5.0.0",
     "prettier": "^1.18.2",
     "react-dom": "^16.12.0",
+    "react-test-renderer": ">=16.8.0",
     "standard-version": "^6.0.1",
     "trash-cli": "^3.0.0",
     "ts-jest": "^25.2.0",
