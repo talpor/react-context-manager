@@ -1,107 +1,158 @@
+import { Reducer } from 'react';
+import { AsyncActionHandlers } from 'use-reducer-async';
 import {
+  Action,
   Actions,
   BoundAction,
-  BoundScope,
   GlobalStore,
-  UnBoundAction,
-  UnBoundActions,
-  UnBoundScope
+  Modifier,
+  Modifiers,
+  NameSpace,
+  Scope,
+  UnBoundActions
 } from './types';
 
 export interface ActionType<
   GS extends GlobalStore,
   UA extends UnBoundActions<GS>
 > {
-  readonly scope: keyof UA;
+  readonly name: keyof UA;
   readonly action: string;
   readonly params: ReadonlyArray<any>;
 }
 
-export const createReducer = <
-  GS extends GlobalStore,
-  UA extends UnBoundActions<GS>
->(
-  unBoundActions: UA
-) => {
-  return (state: GS, action: any) =>
-    unBoundActions[action.scope][action.action](state)(...action.params);
+export interface AsyncAction<GS extends GlobalStore, M extends Modifier<GS>> {
+  readonly type: 'HELPER';
+  readonly stateModifier: ReturnType<M>;
+  readonly scopeName: string;
+  readonly actionName: string;
+  readonly params: ReadonlyArray<any>;
+}
+
+type IAction =
+  | { type: 'START_FETCH' }
+  | { type: 'END_FETCH'; scopeName: string; payload: any }
+  | { type: 'ERROR_FETCH' };
+
+export const reducer: Reducer<any, IAction> = (state, innerAction) => {
+  switch (innerAction.type) {
+    case 'START_FETCH':
+      return {
+        ...state
+        // loading: true,
+      };
+    case 'END_FETCH':
+      return {
+        ...state,
+        // loading: false,
+        ...innerAction.payload
+      };
+    case 'ERROR_FETCH':
+      return {
+        ...state
+        // loading: false,
+      };
+    default:
+      throw new Error('unknown action type');
+  }
+};
+
+// const asyncActionHandlers: AsyncActionHandlers<Reducer<State, Action>, AsyncAction> = {
+// };
+
+// type AsyncAction = { type: 'FETCH_PERSON'; id: number }
+
+export const asyncActionHandlers: AsyncActionHandlers<
+  Reducer<GlobalStore, IAction>,
+  AsyncAction<GlobalStore, any>
+> = {
+  HELPER: ({ dispatch }: any) => async action => {
+    dispatch({ type: 'START_FETCH' });
+    try {
+      const { stateModifier, params, scopeName } = action;
+      const response = await stateModifier(...params);
+
+      dispatch({ type: 'END_FETCH', scopeName, payload: response });
+    } catch (e) {
+      dispatch({ type: 'ERROR_FETCH' });
+    }
+  }
 };
 
 export const createDispatcher = <
   GS extends GlobalStore,
-  UA extends UnBoundActions<GS>
+  M extends Modifiers<GS>
 >(
-  unBoundActions: UA,
+  state: GS,
+  modifiers: M,
   dispatch: any
-): Actions<GS, UA> => {
-  return Object.keys(unBoundActions).reduce(
-    (init, scope) => {
-      const currentScope = unBoundActions[scope];
-      const boundScope: BoundScope<GS, typeof currentScope> = bindScope(
-        scope,
+): Actions<GS, M> => {
+  return Object.keys(modifiers).reduce(
+    (actions, scopeName) => {
+      const currentScope = modifiers[scopeName];
+      const nameSpace: NameSpace<GS, typeof currentScope> = getNameSpace(
+        state,
+        scopeName,
         currentScope,
         dispatch
       );
-
       return {
-        ...init,
-        [scope]: boundScope
+        ...actions,
+        [scopeName]: nameSpace
       };
     },
-    ({} as any) as Actions<GS, UA>
+    ({} as any) as Actions<GS, M>
   );
 };
 
-export const bindAction = <
+export const getNameSpace = <
   GS extends GlobalStore,
-  UA extends UnBoundActions<GS>,
-  US extends UnBoundScope<GS>,
-  A extends UnBoundAction<GS>
+  M extends Modifiers<GS>,
+  S extends Scope<GS>
 >(
-  scope: keyof UA,
-  actionName: keyof US,
-  _: A,
+  state: GS,
+  scopeName: keyof M,
+  scope: S,
   dispatch: any
-) => {
-  const boundAction: BoundAction<GS, A> = (
-    ...params: Parameters<ReturnType<A>>
-  ) => {
-    const actionType: ActionType<GS, UA> = {
-      action: String(actionName),
-      params,
-      scope
-    };
-
-    return dispatch(actionType);
-  };
-  return boundAction;
-};
-
-export const bindScope = <
-  GS extends GlobalStore,
-  UA extends UnBoundActions<GS>,
-  US extends UnBoundScope<GS>
->(
-  scopeName: keyof UA,
-  unBoundScope: US,
-  dispatch: any
-): BoundScope<GS, US> => {
-  const boundScope: BoundScope<GS, US> = Object.keys(unBoundScope).reduce(
+): NameSpace<GS, S> => {
+  const boundScope: NameSpace<GS, S> = Object.keys(scope).reduce(
     (bs, actionName: string) => {
-      const currentAction = unBoundScope[actionName];
-      const boundAction: BoundAction<GS, typeof currentAction> = bindAction(
+      const modifier = scope[actionName];
+      const action: BoundAction<GS, typeof modifier> = getAction(
+        state,
         String(scopeName),
         actionName,
-        currentAction,
+        modifier,
         dispatch
       );
       return {
         ...bs,
-        [actionName]: boundAction
+        [actionName]: action
       };
     },
-    ({} as any) as BoundScope<GS, US>
+    ({} as any) as NameSpace<GS, S>
   );
 
   return boundScope;
+};
+
+export const getAction = <GS extends GlobalStore, M extends Modifier<GS>>(
+  state: GS,
+  scopeName: string,
+  actionName: string,
+  modifier: M,
+  dispatch: any
+) => {
+  const action: Action<GS, M> = (...params: Parameters<ReturnType<M>>) => {
+    const actionType: AsyncAction<GS, M> = {
+      actionName,
+      params,
+      scopeName,
+      stateModifier: modifier(state) as ReturnType<M>,
+      type: 'HELPER'
+    };
+
+    return dispatch(actionType);
+  };
+  return action;
 };
