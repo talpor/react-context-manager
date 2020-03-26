@@ -1,6 +1,7 @@
-import React, { createContext, Reducer, useReducer } from 'react';
+import React, { createContext } from 'react';
+import { useReducerAsync } from 'use-reducer-async';
 import { Actions, ContextObject, GlobalStore, UnBoundActions } from './types';
-import { createDispatcher, createReducer } from './utils';
+import { asyncActionHandlers, createDispatcher, reducer } from './utils';
 
 export const initContext = <
   GS extends GlobalStore,
@@ -30,11 +31,15 @@ const ContextProvider = <
   children
 }: ContextProviderProps<GS, UA>) => {
   const CTX = context;
-  const reducer = createReducer<GS, typeof actions>(actions);
   // TODO: Find typings to allow GS | Promise<GS> in reducer return type
-  const [state, dispatch] = useReducer<Reducer<GS, any>>(reducer as any, store);
+  const [state, dispatch] = useReducerAsync(
+    reducer,
+    store,
+    asyncActionHandlers
+  );
 
   const actionDispatcher = createDispatcher<GS, typeof actions>(
+    state,
     actions,
     dispatch
   );
