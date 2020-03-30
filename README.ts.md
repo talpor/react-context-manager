@@ -84,7 +84,7 @@ Also, the dispatcher injects the current state portion to the action in case dat
 Finally, actions should return the next state of the application, as shown in this next example:
 
 ```jsx
-export interface IUserActions extends UnBoundScope<IStore> {
+export interface IUserActions extends Scope<IStore> {
   team: {
     addColaborator: (state: IStore) => (email: string) => IStore
   };
