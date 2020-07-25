@@ -1,5 +1,5 @@
 import { Reducer } from 'react';
-import { AsyncActionHandlers } from 'use-reducer-async';
+import { AsyncActionHandlers } from './useReducerAsync';
 import {
   Action,
   Actions,
@@ -143,7 +143,9 @@ export const getAction = <GS extends GlobalStore, M extends Modifier<GS>>(
   modifier: M,
   dispatch: any
 ) => {
-  const action: Action<GS, M> = (...params: Parameters<ReturnType<M>>) => {
+  const action: Action<GS, M> = async (
+    ...params: Parameters<ReturnType<M>>
+  ) => {
     const actionType: AsyncAction<GS, M> = {
       actionName,
       params,
@@ -152,7 +154,9 @@ export const getAction = <GS extends GlobalStore, M extends Modifier<GS>>(
       type: 'HELPER'
     };
 
-    return dispatch(actionType);
+    const result = await dispatch(actionType);
+
+    return result;
   };
   return action;
 };
