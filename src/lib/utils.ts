@@ -1,5 +1,4 @@
 import { Reducer } from 'react';
-import { AsyncActionHandlers } from './useReducerAsync';
 import {
   Action,
   Actions,
@@ -11,6 +10,7 @@ import {
   Scope,
   UnBoundActions
 } from './types';
+import { AsyncActionHandlers } from './useReducerAsync';
 
 export interface ActionType<
   GS extends GlobalStore,
@@ -30,9 +30,13 @@ export interface AsyncAction<GS extends GlobalStore, M extends Modifier<GS>> {
 }
 
 type IAction =
-  | { type: 'START_FETCH' }
-  | { type: 'END_FETCH'; scopeName: string; payload: any }
-  | { type: 'ERROR_FETCH' };
+  | { readonly type: 'START_FETCH' }
+  | {
+      readonly type: 'END_FETCH';
+      readonly scopeName: string;
+      readonly payload: any;
+    }
+  | { readonly type: 'ERROR_FETCH' };
 
 export const reducer: Reducer<any, IAction> = (state, innerAction) => {
   switch (innerAction.type) {
@@ -71,8 +75,8 @@ export const asyncActionHandlers: AsyncActionHandlers<
     try {
       const { stateModifier, params, scopeName } = action;
       const response = await stateModifier(...params);
-
       dispatch({ type: 'END_FETCH', scopeName, payload: response });
+      return response;
     } catch (e) {
       dispatch({ type: 'ERROR_FETCH' });
     }
