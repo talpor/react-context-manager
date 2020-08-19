@@ -1,6 +1,6 @@
 import React, { createContext } from 'react';
-import { useReducerAsync } from 'use-reducer-async';
 import { Actions, ContextObject, GlobalStore, UnBoundActions } from './types';
+import { useReducerAsync } from './useReducerAsync';
 import { asyncActionHandlers, createDispatcher, reducer } from './utils';
 
 export const initContext = <

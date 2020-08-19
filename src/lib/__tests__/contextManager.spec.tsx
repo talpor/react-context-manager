@@ -1,8 +1,16 @@
 import React, { useContext } from 'react';
-import { render, fireEvent, getByTestId, wait } from '@testing-library/react';
+import {
+  render,
+  fireEvent,
+  getByTestId,
+  wait,
+  act
+} from '@testing-library/react';
 
 import ContextProvider, { initContext } from '../contextManager';
 import { GlobalStore, UnBoundActions, UnBoundScope } from '../types';
+
+jest.useFakeTimers();
 
 interface Store extends GlobalStore {
   readonly test: {
@@ -12,8 +20,12 @@ interface Store extends GlobalStore {
 }
 
 interface TestScope extends UnBoundScope<Store> {
+  readonly delay: (
+    _: Store
+  ) => (time: number, textToChange: string) => Promise<Store>;
   readonly testAction: (_: Store) => (textToChange: string) => Store;
 }
+
 interface Actions extends UnBoundActions<Store> {
   readonly test: TestScope;
 }
@@ -41,6 +53,14 @@ const DummyComponent = () => {
 
 const actions: Actions = {
   test: {
+    delay: (state: Store) => async (time: number, textToChange: string) => {
+      const newStore = { test: { ...state.test, textToChange } };
+      return new Promise(resolve =>
+        setTimeout(() => {
+          return resolve(newStore);
+        }, time)
+      ) as Promise<Store>;
+    },
     testAction: (state: Store) => (textToChange: string) => {
       return {
         test: { ...state.test, textToChange }
@@ -77,5 +97,49 @@ describe('contextManager', () => {
       expect(shouldChangeElement.textContent).toBe(newText);
       expect(notShouldChangeElement.textContent).toBe(store.test.textToKeep);
     });
+
+    it('should handle syncronous calls', async () => {
+      const { container } = render(
+        <ContextProvider actions={actions} store={store} context={testContext}>
+          <DummyAsyncComponent />
+        </ContextProvider>
+      );
+      let shouldChangeElement = getByTestId(container, 'should-change');
+      expect(shouldChangeElement.textContent).toBe(store.test.textToChange);
+
+      const button = getByTestId(container, 'button');
+      await act(async () => {
+        await fireEvent.click(button);
+      });
+      await jest.advanceTimersByTime(1200);
+
+      await wait(() => getByTestId(container, 'should-change').textContent);
+      expect(shouldChangeElement.textContent).toBe('First Call');
+
+      await jest.runAllTimers(); // or jest.advanceTimersByTime(1000)
+
+      await wait(() => getByTestId(container, 'should-change').textContent);
+      expect(shouldChangeElement.textContent).toBe('Second Call');
+    });
   });
 });
+
+export const DummyAsyncComponent = () => {
+  const store = useContext(testContext.store);
+  const actions = useContext(testContext.actions);
+
+  const runActions = async () => {
+    await actions.test.delay(1000, 'First Call');
+    await actions.test.delay(500, 'Second Call');
+  };
+
+  return (
+    <p>
+      <span data-testid="should-change">{store.test.textToChange}</span>
+      <span data-testid="not-should-change">{store.test.textToKeep}</span>
+      <button data-testid="button" onClick={runActions}>
+        Run!
+      </button>
+    </p>
+  );
+};
