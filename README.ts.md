@@ -8,6 +8,8 @@ We recommend you to use this along with our custom [CLI](https://github.com/talp
 
 For Javascript documentation, [click here](https://github.com/talpor/react-context-manager/README.md).
 
+If you want to follow a tutorial, we recommend this [post](https://medium.com/swlh/handle-the-state-of-reactjs-applications-in-a-simple-and-efficient-way-225975562f33?source=friends_link&sk=04bff2674ed9a63d799e97327af3bf55)
+
 ## Influences
 
 React Context Manager obtained some ideas from [Redux](https://github.com/reduxjs/redux), such as the structure for actions and some HOC functions for class-based components, but avoiding a lot of extra verbosity and complexity by using React's own Context API.
@@ -82,7 +84,7 @@ Also, the dispatcher injects the current state portion to the action in case dat
 Finally, actions should return the next state of the application, as shown in this next example:
 
 ```jsx
-export interface IUserActions extends UnBoundScope<IStore> {
+export interface IUserActions extends Scope<IStore> {
   team: {
     addColaborator: (state: IStore) => (email: string) => IStore
   };
