@@ -11,7 +11,7 @@ export interface GlobalStore {
 // (store) => (userid: number) => globalStore
 export type Modifier<GS extends GlobalStore> = (
   store: GS
-) => (...args: ReadonlyArray<any>) => GS | Promise<GS>;
+) => (...args: ReadonlyArray<any>) => Partial<GS> | Promise<Partial<GS>>;
 export interface UnBoundAction<GS extends GlobalStore> extends Modifier<GS> {}
 
 // { add: Modifier, edit: Modifier, ... }
@@ -31,7 +31,7 @@ export interface UnBoundActions<GS extends GlobalStore> extends Modifiers<GS> {}
 */
 export type Action<GS extends GlobalStore, M extends Modifier<GS>> = (
   ...args: Parameters<ReturnType<M>>
-) => void;
+) => Partial<GS> | Promise<Partial<GS>>;
 // (userid: number) => void
 export interface BoundAction<
   GS extends GlobalStore,
@@ -40,15 +40,15 @@ export interface BoundAction<
 
 // {{ add: Action, edit: Action, ... }}
 export type NameSpace<GS extends GlobalStore, S extends Scope<GS>> = {
-  readonly [A in keyof S]: Action<GS, S[A]>
+  readonly [A in keyof S]: Action<GS, S[A]>;
 };
 export type BoundScope<GS extends GlobalStore, S extends UnBoundScope<GS>> = {
-  readonly [A in keyof S]: BoundAction<GS, S[A]>
+  readonly [A in keyof S]: BoundAction<GS, S[A]>;
 };
 
 // { user: NameSpace, auth: NameSpace, ...}
 export type Actions<GS extends GlobalStore, T extends UnBoundActions<GS>> = {
-  readonly [S in keyof T]: NameSpace<GS, T[S]>
+  readonly [S in keyof T]: NameSpace<GS, T[S]>;
 };
 
 export interface ContextObject<

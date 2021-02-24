@@ -2,20 +2,15 @@ import { Reducer } from 'react';
 import {
   Action,
   Actions,
-  BoundAction,
   GlobalStore,
   Modifier,
   Modifiers,
   NameSpace,
   Scope,
-  UnBoundActions
 } from './types';
 import { AsyncActionHandlers } from './useReducerAsync';
 
-export interface ActionType<
-  GS extends GlobalStore,
-  UA extends UnBoundActions<GS>
-> {
+export interface ActionType<GS extends GlobalStore, UA extends Modifier<GS>> {
   readonly name: keyof UA;
   readonly action: string;
   readonly params: ReadonlyArray<any>;
@@ -42,18 +37,18 @@ export const reducer: Reducer<any, IAction> = (state, innerAction) => {
   switch (innerAction.type) {
     case 'START_FETCH':
       return {
-        ...state
+        ...state,
         // loading: true,
       };
     case 'END_FETCH':
       return {
         ...state,
         // loading: false,
-        ...innerAction.payload
+        ...innerAction.payload,
       };
     case 'ERROR_FETCH':
       return {
-        ...state
+        ...state,
         // loading: false,
       };
     default:
@@ -70,7 +65,7 @@ export const asyncActionHandlers: AsyncActionHandlers<
   Reducer<GlobalStore, IAction>,
   AsyncAction<GlobalStore, any>
 > = {
-  HELPER: ({ dispatch }: any) => async action => {
+  HELPER: ({ dispatch }: any) => async (action) => {
     dispatch({ type: 'START_FETCH' });
     try {
       const { stateModifier, params, scopeName } = action;
@@ -80,7 +75,7 @@ export const asyncActionHandlers: AsyncActionHandlers<
     } catch (e) {
       dispatch({ type: 'ERROR_FETCH' });
     }
-  }
+  },
 };
 
 export const createDispatcher = <
@@ -91,22 +86,19 @@ export const createDispatcher = <
   modifiers: M,
   dispatch: any
 ): Actions<GS, M> => {
-  return Object.keys(modifiers).reduce(
-    (actions, scopeName) => {
-      const currentScope = modifiers[scopeName];
-      const nameSpace: NameSpace<GS, typeof currentScope> = getNameSpace(
-        state,
-        scopeName,
-        currentScope,
-        dispatch
-      );
-      return {
-        ...actions,
-        [scopeName]: nameSpace
-      };
-    },
-    ({} as any) as Actions<GS, M>
-  );
+  return Object.keys(modifiers).reduce((actions, scopeName) => {
+    const currentScope = modifiers[scopeName];
+    const nameSpace: NameSpace<GS, typeof currentScope> = getNameSpace(
+      state,
+      scopeName,
+      currentScope,
+      dispatch
+    );
+    return {
+      ...actions,
+      [scopeName]: nameSpace,
+    };
+  }, ({} as any) as Actions<GS, M>);
 };
 
 export const getNameSpace = <
@@ -122,7 +114,7 @@ export const getNameSpace = <
   const boundScope: NameSpace<GS, S> = Object.keys(scope).reduce(
     (bs, actionName: string) => {
       const modifier = scope[actionName];
-      const action: BoundAction<GS, typeof modifier> = getAction(
+      const action: Action<GS, typeof modifier> = getAction(
         state,
         String(scopeName),
         actionName,
@@ -131,7 +123,7 @@ export const getNameSpace = <
       );
       return {
         ...bs,
-        [actionName]: action
+        [actionName]: action,
       };
     },
     ({} as any) as NameSpace<GS, S>
@@ -155,7 +147,7 @@ export const getAction = <GS extends GlobalStore, M extends Modifier<GS>>(
       params,
       scopeName,
       stateModifier: modifier(state) as ReturnType<M>,
-      type: 'HELPER'
+      type: 'HELPER',
     };
 
     const result = await dispatch(actionType);

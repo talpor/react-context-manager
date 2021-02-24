@@ -1,11 +1,8 @@
 import React, { ComponentClass, FunctionComponent } from 'react';
 
-import { Actions, ContextObject, GlobalStore, UnBoundActions } from './types';
+import { Actions, ContextObject, GlobalStore, Modifiers } from './types';
 
-export const parseField = <
-  GS extends GlobalStore,
-  UA extends UnBoundActions<GS>
->(
+export const parseField = <GS extends GlobalStore, UA extends Modifiers<GS>>(
   store: GS | Actions<GS, UA>,
   rawField: string
 ) => {
@@ -18,14 +15,14 @@ export const parseField = <
   }
 };
 
-const storeSelector = <GS extends GlobalStore, UA extends UnBoundActions<GS>>(
+const storeSelector = <GS extends GlobalStore, UA extends Modifiers<GS>>(
   store: GS | Actions<GS, UA>,
   fields: ReadonlyArray<keyof GS>
 ) => {
   const out = fields.reduce(
     (newStore, field) => ({
       ...newStore,
-      ...parseField(store, String(field))
+      ...parseField(store, String(field)),
     }),
     {}
   );
@@ -33,14 +30,14 @@ const storeSelector = <GS extends GlobalStore, UA extends UnBoundActions<GS>>(
   return out;
 };
 
-interface MapedProps<GS extends GlobalStore, UA extends UnBoundActions<GS>> {
+interface MapedProps<GS extends GlobalStore, UA extends Modifiers<GS>> {
   readonly actions: Partial<Actions<GS, UA>>;
   readonly store: Partial<GS>;
 }
 
 const mapContextToProps = <
   GS extends GlobalStore,
-  UA extends UnBoundActions<GS>,
+  UA extends Modifiers<GS>,
   Props,
   State
 >(
@@ -52,12 +49,12 @@ const mapContextToProps = <
   const ActionsConsumer = context.actions.Consumer;
   return (
     <StoreConsumer>
-      {store => (
+      {(store) => (
         <ActionsConsumer>
-          {actions => {
+          {(actions) => {
             const injectedProps: MapedProps<GS, UA> = {
               actions: storeSelector(actions, scopes),
-              store: storeSelector(store, scopes)
+              store: storeSelector(store, scopes),
             };
 
             return <WrappedComponent {...props} {...injectedProps} />;
