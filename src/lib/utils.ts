@@ -2,7 +2,6 @@ import { Reducer } from 'react';
 import {
   Action,
   Actions,
-  BoundAction,
   GlobalStore,
   Modifier,
   Modifiers,
@@ -115,7 +114,7 @@ export const getNameSpace = <
   const boundScope: NameSpace<GS, S> = Object.keys(scope).reduce(
     (bs, actionName: string) => {
       const modifier = scope[actionName];
-      const action: BoundAction<GS, typeof modifier> = getAction(
+      const action: Action<GS, typeof modifier> = getAction(
         state,
         String(scopeName),
         actionName,

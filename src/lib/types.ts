@@ -31,7 +31,7 @@ export interface UnBoundActions<GS extends GlobalStore> extends Modifiers<GS> {}
 */
 export type Action<GS extends GlobalStore, M extends Modifier<GS>> = (
   ...args: Parameters<ReturnType<M>>
-) => void;
+) => Partial<GS> | Promise<Partial<GS>>;
 // (userid: number) => void
 export interface BoundAction<
   GS extends GlobalStore,

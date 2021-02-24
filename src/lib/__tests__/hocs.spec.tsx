@@ -3,7 +3,7 @@ import { render, fireEvent, getByTestId, wait } from '@testing-library/react';
 
 import ContextProvider, { initContext } from '../contextManager';
 import { mapContextToProps } from '../hocs';
-import { GlobalStore, UnBoundActions, UnBoundScope } from '../types';
+import { GlobalStore, Modifiers, Scope } from '../types';
 
 interface Store extends GlobalStore {
   readonly test: {
@@ -12,10 +12,10 @@ interface Store extends GlobalStore {
   };
 }
 
-interface TestScope extends UnBoundScope<Store> {
+interface TestScope extends Scope<Store> {
   readonly testAction: (_: Store) => (textToChange: string) => Store;
 }
-interface Actions extends UnBoundActions<Store> {
+interface Actions extends Modifiers<Store> {
   readonly test: TestScope;
 }
 
@@ -46,16 +46,16 @@ describe('hocs', () => {
       test: {
         testAction: (state: Store) => (textToChange: string) => ({
           ...state,
-          test: { ...state.test, textToChange }
-        })
-      }
+          test: { ...state.test, textToChange },
+        }),
+      },
     };
 
     const store: Store = {
       test: {
         textToChange: 'not worked :(',
-        textToKeep: 'not change'
-      }
+        textToKeep: 'not change',
+      },
     };
 
     it('should change the context state value when a button is clicked', async () => {

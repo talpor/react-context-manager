@@ -4,11 +4,11 @@ import {
   fireEvent,
   getByTestId,
   wait,
-  act
+  act,
 } from '@testing-library/react';
 
 import ContextProvider, { initContext } from '../contextManager';
-import { GlobalStore, UnBoundActions, UnBoundScope } from '../types';
+import { GlobalStore, Modifiers, Scope } from '../types';
 
 jest.useFakeTimers();
 
@@ -19,14 +19,14 @@ interface Store extends GlobalStore {
   };
 }
 
-interface TestScope extends UnBoundScope<Store> {
+interface TestScope extends Scope<Store> {
   readonly delay: (
     _: Store
   ) => (time: number, textToChange: string) => Promise<Store>;
   readonly testAction: (_: Store) => (textToChange: string) => Store;
 }
 
-interface Actions extends UnBoundActions<Store> {
+interface Actions extends Modifiers<Store> {
   readonly test: TestScope;
 }
 
@@ -55,7 +55,7 @@ const actions: Actions = {
   test: {
     delay: (state: Store) => async (time: number, textToChange: string) => {
       const newStore = { test: { ...state.test, textToChange } };
-      return new Promise(resolve =>
+      return new Promise((resolve) =>
         setTimeout(() => {
           return resolve(newStore);
         }, time)
@@ -63,17 +63,17 @@ const actions: Actions = {
     },
     testAction: (state: Store) => (textToChange: string) => {
       return {
-        test: { ...state.test, textToChange }
+        test: { ...state.test, textToChange },
       };
-    }
-  }
+    },
+  },
 };
 
 const store: Store = {
   test: {
     textToChange: 'not worked :(',
-    textToKeep: 'not change'
-  }
+    textToKeep: 'not change',
+  },
 };
 
 describe('contextManager', () => {
