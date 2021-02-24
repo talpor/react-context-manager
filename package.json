@@ -1,6 +1,6 @@
 {
   "name": "@talpor/react-context-manager",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A lightweight store manager based on React Context API",
   "main": "build/module/index.js",
   "typings": "build/module/index.d.ts",
