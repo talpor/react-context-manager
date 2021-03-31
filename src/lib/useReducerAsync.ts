@@ -1,3 +1,4 @@
+import 'abortcontroller-polyfill/dist/abortcontroller-polyfill-only'
 import {
   Dispatch,
   Reducer,
