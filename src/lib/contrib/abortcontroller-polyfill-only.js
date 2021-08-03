@@ -1,3 +1,4 @@
+// Original code from https://github.com/mo/abortcontroller-polyfill compiled in abortcontroller-polyfill/dist/abortcontroller-polyfill-only
 (function (factory) {
   typeof define === 'function' && define.amd ? define(factory) :
   factory();
