@@ -6,7 +6,7 @@ It helps you to set a standard for your React apps using Context API.
 
 We recommend you to use this along with our custom [CLI](https://github.com/talpor/react-context-manager-cli).
 
-For Javascript documentation, [click here](https://github.com/talpor/react-context-manager/README.md).
+For Javascript documentation, [click here](https://github.com/talpor/react-context-manager/blob/a5e4b95a516c04dda6f64c75308b477ca3cf6fcd/README.md).
 
 If you want to follow a tutorial, we recommend this [post](https://medium.com/swlh/handle-the-state-of-reactjs-applications-in-a-simple-and-efficient-way-225975562f33?source=friends_link&sk=04bff2674ed9a63d799e97327af3bf55)
 
